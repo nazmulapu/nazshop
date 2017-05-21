@@ -10,3 +10,16 @@ class Cart {
             $this->cart_contents = array('cart_total' => 0, 'total_items' => 0);
         }
     }
+	
+	
+	public function contents(){
+        
+        $cart = array_reverse($this->cart_contents);
+		
+        unset($cart['total_items']);
+        unset($cart['cart_total']);
+
+        return $cart;
+    }
+	
+	
