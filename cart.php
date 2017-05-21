@@ -22,4 +22,16 @@ class Cart {
         return $cart;
     }
 	
+	public function get_item($row_id){
+        return (in_array($row_id, array('total_items', 'cart_total'), TRUE) OR ! isset($this->cart_contents[$row_id]))
+            ? FALSE
+            : $this->cart_contents[$row_id];
+    }
+	
+	  public function total_items(){
+        return $this->cart_contents['total_items'];
+    }
+	
+	
+	
 	
