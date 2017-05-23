@@ -32,6 +32,43 @@ class Cart {
         return $this->cart_contents['total_items'];
     }
 	
+	// insert items
+	
+	public function insert($item = array()){
+        if(!is_array($item) OR count($item) === 0){
+            return FALSE;
+        }else{
+            if(!isset($item['id'], $item['name'], $item['price'], $item['qty'])){
+                return FALSE;
+            }else{
+                /*
+                 * Insert Item
+                 */
+                // prep the quantity
+                $item['qty'] = (float) $item['qty'];
+                if($item['qty'] == 0){
+                    return FALSE;
+                }
+                // prep the price
+                $item['price'] = (float) $item['price'];
+                // create a unique identifier for the item being inserted into the cart
+                $rowid = md5($item['id']);
+                // get quantity if it's already there and add it on
+                $old_qty = isset($this->cart_contents[$rowid]['qty']) ? (int) $this->cart_contents[$rowid]['qty'] : 0;
+                // re-create the entry with unique identifier and updated quantity
+                $item['rowid'] = $rowid;
+                $item['qty'] += $old_qty;
+                $this->cart_contents[$rowid] = $item;
+                
+                // save Cart Item
+                if($this->save_cart()){
+                    return isset($rowid) ? $rowid : TRUE;
+                }else{
+                    return FALSE;
+                }
+            }
+        }
+    }
 	
 	
 	
