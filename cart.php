@@ -107,3 +107,46 @@ class Cart {
         }
     }
     
+	// Save the cart 
+	
+	protected function save_cart(){
+        $this->cart_contents['total_items'] = $this->cart_contents['cart_total'] = 0;
+        foreach ($this->cart_contents as $key => $val){
+            
+            if(!is_array($val) OR !isset($val['price'], $val['qty'])){
+                continue;
+            }
+     
+            $this->cart_contents['cart_total'] += ($val['price'] * $val['qty']);
+            $this->cart_contents['total_items'] += $val['qty'];
+            $this->cart_contents[$key]['subtotal'] = ($this->cart_contents[$key]['price'] * $this->cart_contents[$key]['qty']);
+        }
+        
+        
+        if(count($this->cart_contents) <= 2){
+            unset($_SESSION['cart_contents']);
+            return FALSE;
+        }else{
+            $_SESSION['cart_contents'] = $this->cart_contents;
+            return TRUE;
+        }
+    }
+	
+	// Remove Item 
+	
+	 public function remove($row_id){
+       
+        unset($this->cart_contents[$row_id]);
+        $this->save_cart();
+        return TRUE;
+     }
+	 
+	 // destory the cart 
+	 
+	 public function destroy(){
+        $this->cart_contents = array('cart_total' => 0, 'total_items' => 0);
+        unset($_SESSION['cart_contents']);
+    }
+}
+	
+	
