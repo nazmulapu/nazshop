@@ -71,4 +71,39 @@ class Cart {
     }
 	
 	
+	// update cart 
 	
+	public function update($item = array()){
+        if (!is_array($item) OR count($item) === 0){
+            return FALSE;
+        }else{
+            if (!isset($item['rowid'], $this->cart_contents[$item['rowid']])){
+                return FALSE;
+            }else{
+                
+                if(isset($item['qty'])){
+                    $item['qty'] = (float) $item['qty'];
+                  
+                    if ($item['qty'] == 0){
+                        unset($this->cart_contents[$item['rowid']]);
+                        return TRUE;
+                    }
+                }
+                
+                
+                $keys = array_intersect(array_keys($this->cart_contents[$item['rowid']]), array_keys($item));
+              
+                if(isset($item['price'])){
+                    $item['price'] = (float) $item['price'];
+                }
+               
+                foreach(array_diff($keys, array('id', 'name')) as $key){
+                    $this->cart_contents[$item['rowid']][$key] = $item[$key];
+                }
+               
+                $this->save_cart();
+                return TRUE;
+            }
+        }
+    }
+    
