@@ -47,5 +47,4 @@ include 'dbconfig.php';
     </div>
 </div>
 </body>
-</body>
 </html>
